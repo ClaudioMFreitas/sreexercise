@@ -48,3 +48,7 @@ This new company wants to be able to use infrastructure as code metodology so yo
                                                         |         |
                                                         +---------+
 ```
+
+## Solutions
+
+To submit a solution create a brach with you name on it and start commiting. :)
