@@ -1,0 +1,5 @@
+---
+- hosts: load-balancer
+  become: yes
+  roles:
+    - nginxinc.nginx
