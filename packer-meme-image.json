@@ -1,0 +1,35 @@
+{
+    "variables": {
+        "account_file": "{{env `GOOGLE_APPLICATION_CREDENTIALS`}}",
+        "project": "{{env `GCP_PROJECT`}}",
+        "version": "2"
+    },
+
+    "builders": [
+        {
+            "type": "googlecompute",
+            "account_file": "{{user `account_file`}}",
+            "project_id": "{{user `project`}}",
+            "source_image": "debian-9-stretch-v20190514",
+            "ssh_username": "memes",
+            "zone": "europe-west2-a",
+            "image_name": "debian9-meme-image-v{{user `version`}}"
+        }
+    ],
+
+    "provisioners": [
+        {
+            "type": "shell",
+            "inline": [
+                "sudo apt-get update",
+                "sudo apt-get install -y apt-transport-https ca-certificates curl gnupg2 software-properties-common",
+                "curl -fsSL https://download.docker.com/linux/debian/gpg | sudo apt-key add -",
+                "sudo add-apt-repository \"deb [arch=amd64] https://download.docker.com/linux/debian $(lsb_release -cs) stable\"",
+                "sudo apt-get update",
+                "sudo apt-get install -y docker-ce docker-ce-cli containerd.io",
+                "sudo docker run --restart=always -d -p 80:8080 jpgrego/memecorp:release-v{{user `version`}}"
+            ]
+        }
+    ]
+
+}

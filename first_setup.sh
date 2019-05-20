@@ -1,24 +1,23 @@
 #!/bin/bash
-# this script assumes GOOGLE_APPLICATION_CREDENTIALS have been set, and that a
-# key on $HOME/.ssh called "google_compute_engine" has its public counterpart on
-# the machines
+
+readonly PROJECT_NAME="thememes"
+
+# set -e
+# gcloud projects create "${PROJECT_NAME}" --organization "${ORGANIZATION_ID}" --set-as-default
+# gcloud config set project "${PROJECT_NAME}"
+# gcloud iam service-accounts create theboss
+# gcloud projects add-iam-policy-binding "${PROJECT_NAME}" --member serviceAccount:theboss@"${PROJECT_NAME}".iam.gserviceaccount.com --role roles/storage.admin --role roles/owner
+# gcloud beta billing projects link "${PROJECT_NAME}" --billing-account "${BILLING_ACCOUNT}"
+# gcloud services enable cloudbilling.googleapis.com compute.googleapis.com cloudresourcemanager.googleapis.com
+# gcloud organizations add-iam-policy-binding 620865151323 --member serviceAccount:theboss@"${PROJECT_NAME}".iam.gserviceaccount.com --role roles/resourcemanager.projectCreator --role roles/billing.user
+
+packer build packer-meme-image.json
 
 set -e
-
-pushd terraform-ansible
-sed -ri 's/(#access_config)/access_config/' compute.tf
-terraform plan -out ~/current_plan.tf
-terraform apply ~/current_plan.tf
-
-# giving it time
-sleep 5
-
-ansible-playbook -i /home/jpgrego/go/bin/terraform-inventory deploy_nginx.yml \
-                 --private-key ~/.ssh/google_compute_engine
-ansible-playbook -i /home/jpgrego/go/bin/terraform-inventory deploy_nodejs.yml \
-                 --private-key ~/.ssh/google_compute_engine
-
-# hacky way to remove external interfaces on web machines...
-sed -ri 's/(access_config \{ \} # remove)/#\1/' compute.tf
+pushd terraform
+if [ ! -f terraform.tfstate ]; then
+    terraform import google_project.project "${PROJECT_NAME}"
+    terraform import google_project_services.project "${PROJECT_NAME}"
+fi
 terraform plan -out ~/current_plan.tf
 terraform apply ~/current_plan.tf

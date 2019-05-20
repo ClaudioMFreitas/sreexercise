@@ -1,25 +1,15 @@
 data "google_compute_zones" "available-region1" {
   region  = "${var.region1}"
-  project = "${google_project_services.project.project}"
 }
 
 data "google_compute_zones" "available-region2" {
   region  = "${var.region2}"
-  project = "${google_project_services.project.project}"
 }
 
-# resource "ansible_host" "load-balancer" {
-#   inventory_hostname = "${google_compute_instance.load-balancer.network_interface.0.access_config.0.nat_ip}"
-#   # groups = ["load-balancer-group"]
-#   vars {
-#     ansible_user = "jpgrego"
-#   }
-# }
-
-# resource "ansible_group" "load-balancer-group" {
-#   inventory_group_name = "load-balancer-group"
-#   children = ["load-balancer"]
-# }
+data "google_compute_instance_group" "r1" {
+  name = "r1-instance"
+  zone = "${data.google_compute_zones.available-region1.names[0]}"
+}
 
 resource "google_compute_instance_group_manager" "webserver-group-r1" {
   name               = "webserver-group-r1"
@@ -66,13 +56,13 @@ resource "google_compute_instance_template" "webservers" {
   }
 
   disk {
-    source_image = "debian-cloud/debian-9"
-    auto_delete  = true
+    source_image = "${google_project_services.project.project}/debian9-meme-image-v${var.meme_version}"
+    auto_delete  = false
     boot         = true
   }
 
   network_interface {
     network = "default"
-    access_config { } # remove
+    # access_config { } # remove
   }
 }

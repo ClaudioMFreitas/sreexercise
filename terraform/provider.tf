@@ -1,11 +1,3 @@
-variable "project_name" {}
-variable "region1" {}
-variable "region2" {}
-variable "billing_account" {}
-variable "org_id"  {}
-variable "ssh_user" {}
-variable "ssh_pub_key_file" {}
-
 provider "google" {
   project = "${var.project_name}"
   region  = "${var.region1}"
@@ -21,6 +13,7 @@ resource "google_project" "project" {
   project_id           = "${var.project_name}"
   billing_account      = "${var.billing_account}"
   org_id               = "${var.org_id}"
+  skip_delete          = true
 }
 
 resource "google_project_services" "project" {
