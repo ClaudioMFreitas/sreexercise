@@ -1,0 +1,3 @@
+[submodule "memecorp"]
+	path = memecorp
+	url = https://github.com/jpgrego/memecorp
