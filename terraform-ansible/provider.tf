@@ -7,7 +7,8 @@ variable "ssh_user" {}
 variable "ssh_pub_key_file" {}
 
 provider "google" {
-  region = "${var.region1}"
+  project = "${var.project_name}"
+  region  = "${var.region1}"
 }
 
 #resource "random_id" "id" {
