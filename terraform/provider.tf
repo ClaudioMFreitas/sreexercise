@@ -3,6 +3,11 @@ provider "google" {
   region  = "${var.region1}"
 }
 
+provider "google-beta" {
+  project = "${var.project_name}"
+  region  = "${var.region1}"
+}
+
 #resource "random_id" "id" {
 #  byte_length  = 4
 #  prefix      = "${var.project_name}-"

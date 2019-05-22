@@ -2,7 +2,7 @@
     "variables": {
         "account_file": "{{env `GOOGLE_APPLICATION_CREDENTIALS`}}",
         "project": "{{env `GCP_PROJECT`}}",
-        "version": "2"
+        "version": "{{env `TF_VAR_meme_version`}}"
     },
 
     "builders": [
